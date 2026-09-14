@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice Emotion Bot Platform</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        background: #f6f7fb;
+      }
+      .background-gradient {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(1200px 600px at 20% 10%, #ede9fe 0%, #ffffff00 40%),
+          radial-gradient(900px 500px at 80% 90%, #ffe4e6 0%, #ffffff00 45%),
+          linear-gradient(120deg, #f8fafc 0%, #e9e6f7 100%);
+      }
+      .main-card {
+        position: relative;
+        z-index: 1;
+        max-width: 1100px;
+        margin: 36px auto 0 auto;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 32px;
+        box-shadow: 0 8px 48px #a5b4fc33;
+        padding: 0 0 32px 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 80vh;
+      }
+      .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 28px 38px 0 38px;
+      }
+      .logo-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo-img {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: #232946;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6em;
+      }
+      .logo-text {
+        font-weight: 800;
+        font-size: 1.25em;
+        color: #232946;
+        letter-spacing: 1px;
+      }
+      .user-avatar img {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2.5px solid #e0e7ff;
+        box-shadow: 0 2px 8px #a5b4fc33;
+      }
+      .center-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 32px;
+        margin-bottom: 32px;
+      }
+      .greeting {
+        font-size: 1.3em;
+        color: #232946;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .main-question {
+        font-size: 2.2em;
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-align: center;
+        background: linear-gradient(
+          90deg,
+          #a78bfa 0%,
+          #f472b6 50%,
+          #818cf8 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .subtitle {
+        color: #667085;
+        font-size: 1.05em;
+        margin-bottom: 40px;
+        text-align: center;
+      }
+      .prompt-cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(240px, 1fr));
+        justify-content: center;
+        align-items: start;
+        gap: 24px;
+        margin-bottom: 42px;
+        margin-top: 24px;
+      }
+      .prompt-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 4px 24px #e0e7ff55;
+        padding: 24px 32px 18px 32px;
+        min-width: 280px;
+        max-width: 340px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-decoration: none;
+        color: #0f172a;
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          background 0.18s ease,
+          border 0.18s ease;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+        position: relative;
+        backdrop-filter: blur(8px);
+        width: 100%;
+      }
+      .prompt-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 20px;
+        padding: 1px;
+        background: linear-gradient(120deg, #a78bfa, #f472b6, #818cf8);
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0.25;
+        pointer-events: none;
+      }
+      .prompt-card--disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .prompt-card--disabled:hover {
+        transform: none;
+        box-shadow: 0 4px 24px #e0e7ff55;
+      }
+      .prompt-card:hover {
+        background: rgba(255, 255, 255, 0.98);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 36px #818cf855;
+        border-color: #dbeafe;
+      }
+      .prompt-card:focus-visible {
+        outline: none;
+        box-shadow:
+          0 0 0 3px #a78bfa66,
+          0 12px 36px #818cf855;
+      }
+      .prompt-title {
+        font-weight: 700;
+        font-size: 1.08em;
+        margin-bottom: 6px;
+      }
+      .prompt-desc {
+        color: #555;
+        font-size: 0.98em;
+        line-height: 1.4;
+      }
+      .input-bar {
+        display: flex;
+        align-items: center;
+        background: #f6f7fb;
+        border-radius: 18px;
+        box-shadow: 0 2px 12px #e0e7ff33;
+        margin: 0 auto;
+        max-width: 720px;
+        width: 90%;
+        padding: 10px 22px;
+        border: 1.5px solid #e0e7ff;
+        position: relative;
+      }
+      .input-bar input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 1.1em;
+        flex: 1;
+        color: #232946;
+        padding: 8px 0;
+      }
+      .input-bar button {
+        background: #a78bfa;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2em;
+        margin-left: 8px;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+      .footer-glass {
+        margin-top: 32px;
+        text-align: center;
+        color: #888;
+        font-size: 1.08em;
+        z-index: 2;
+        position: relative;
+        background: none;
+        border-radius: 0 0 24px 24px;
+        padding-bottom: 60px;
+        box-shadow: none;
+      }
+      @media (max-width: 900px) {
+        .main-card {
+          max-width: 98vw;
+        }
+        .top-bar {
+          padding: 18px 2vw 0 2vw;
+        }
+        .prompt-cards {
+          gap: 16px;
+        }
+      }
+      @media (max-width: 600px) {
+        .main-card {
+          border-radius: 0;
+          min-height: 100vh;
+        }
+        .top-bar {
+          flex-direction: column;
+          gap: 8px;
+          padding: 12px 2vw 0 2vw;
+        }
+        .center-content {
+          margin-top: 18px;
+        }
+        .main-question {
+          font-size: 1.6em;
+        }
+        .prompt-cards {
+          grid-template-columns: 1fr;
+        }
+        .prompt-card {
+          min-width: 0;
+          max-width: 98vw;
+          padding: 14px 6vw;
+        }
+        .input-bar {
+          max-width: 98vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background-gradient"></div>
+    <div class="main-card">
+      <div class="top-bar">
+        <div class="logo-title">
+          <span class="logo-img">🎤</span>
+          <span class="logo-text">Voice Emotion Bot</span>
+        </div>
+        <div class="user-avatar">
+          <img
+            src="{{ url_for('static', filename='images/user-avatar.svg') }}"
+            alt="User"
+          />
+        </div>
+      </div>
+      <div class="center-content">
+        <div class="greeting">Hi User</div>
+        <div class="main-question">What would you like to try?</div>
+        <div class="subtitle">
+          Choose one of the chat modes below or use your own creativity!
+        </div>
+        <div class="prompt-cards">
+          {# Mode table: a mode with no URL is rendered as a disabled card #}
+          {% set modes = [
+            ("Voice Only", urls.voice_bot),
+            ("Abstract", urls.abstract),
+            ("Cartoonish Mode", urls.cartoonish_mode),
+            ("Human-Realistic Mode", urls.human_realistic_voice_bot),
+          ] %}
+          {% for title, url in modes %}
+            {% if url %}
+              <a
+                class="prompt-card"
+                href="{{ url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div class="prompt-title">{{ title }}</div>
+              </a>
+            {% else %}
+              <div
+                class="prompt-card prompt-card--disabled"
+                title="Not configured in this deployment"
+              >
+                <div class="prompt-title">{{ title }}</div>
+                <div class="prompt-desc">Not configured in this deployment</div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <form class="input-bar" onsubmit="return false;">
+        <input type="text" placeholder="Ask whatever you want" disabled />
+        <button type="submit" disabled></button>
+      </form>
+    </div>
+    <footer class="footer-glass">
+      &copy; 2026 Voice Emotion Bot Platform &middot; <a href="https://github.com/Minhaz2858/voice-emotion-bot-platform" style="color:#818cf8;text-decoration:none;">MIT licensed</a>
+    </footer>
+    <script src="/static/main.js"></script>
+  </body>
+</html>

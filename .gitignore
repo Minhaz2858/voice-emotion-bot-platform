@@ -1,0 +1,40 @@
+# ---- Dependencies ----
+node_modules/
+.pnp
+.pnp.js
+.pnpm-store/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+
+# ---- Build output ----
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# ---- Secrets / local config (never commit these) ----
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# ---- Local artifacts ----
+outputs/
+*.log
+*.mp3
+*.wav
+*.wav.tmp

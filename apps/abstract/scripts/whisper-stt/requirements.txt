@@ -1,0 +1,6 @@
+# requirements.txt for Whisper STT server
+fastapi
+uvicorn
+openai-whisper
+torch
+ffmpeg-python
