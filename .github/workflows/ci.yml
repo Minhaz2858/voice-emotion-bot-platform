@@ -39,13 +39,7 @@ jobs:
           python-version: '3.10'
       - run: pip install -r requirements.txt
       - name: smoke test launcher
-        run: |
-          python - <<'PY'
-          import app
-          client = app.app.test_client()
-          page = client.get('/')
-          assert page.status_code == 200, page.status_code
-          assert b'prompt-cards' in page.data
-          assert client.get('/healthz').status_code == 200
-          print('launcher OK')
-          PY
+        run: python tests/smoke_test.py
+        env:
+          MODE_VOICE_ONLY_URL: http://localhost:3000
+          MODE_ABSTRACT_URL: http://localhost:3002

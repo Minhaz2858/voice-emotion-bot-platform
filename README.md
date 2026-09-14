@@ -191,6 +191,19 @@ deployment without touching UI code:
 
 ---
 
+## Tests
+
+```bash
+# launcher render + health probe
+cd landing && python tests/smoke_test.py
+
+# both voice apps type-check and build
+cd apps/voice-only && npm run build
+cd apps/abstract  && npm run build
+```
+
+CI (`.github/workflows/ci.yml`) runs exactly these three checks on every push.
+
 ## Tech stack
 
 Next.js 14 · React 18 · TypeScript · TailwindCSS · three.js / React Three Fiber /
