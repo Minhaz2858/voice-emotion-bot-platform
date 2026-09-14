@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const WHISPER_STT_URL =
   process.env.WHISPER_STT_URL || 'http://localhost:8001/transcribe';
-import { Blob } from 'buffer';
 
 export async function whisperSTT(audio: any): Promise<string> {
   // Convert audio to Buffer if needed
@@ -16,7 +15,8 @@ export async function whisperSTT(audio: any): Promise<string> {
     throw new Error('Unsupported audio format');
   }
   const formData = new FormData();
-  formData.append('file', audioBuffer, 'audio.wav');
+  const uint8Array = new Uint8Array(audioBuffer);
+  formData.append('file', new Blob([uint8Array], { type: 'audio/wav' }), 'audio.wav');
   const response = await axios.post(WHISPER_STT_URL, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
     timeout: 60000,

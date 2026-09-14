@@ -9,6 +9,20 @@ function getEnv(name: string, fallback?: string): string {
   throw new Error(`Missing required env var: ${name}`);
 }
 
+async function tryIssueToken(region: string, key: string) {
+  if (!region || !key) return { ok: false, msg: 'Missing region or key', region, key };
+  const tokenRes = await fetch(`https://${region}.api.cognitive.microsoft.com/sts/v1.0/issueToken`, {
+    method: 'POST',
+    headers: {
+      'Ocp-Apim-Subscription-Key': key,
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': '0',
+    },
+  });
+  const msg = await tokenRes.text();
+  return { ok: tokenRes.ok, msg, region, key };
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { text, voiceName, outputFormat } = await req.json();
@@ -25,20 +39,6 @@ export async function POST(req: NextRequest) {
       region: getEnv('AZURE_SPEECH_REGION_SECONDARY', 'southeastasia').trim(),
       key: getEnv('AZURE_SPEECH_KEY_SECONDARY', '').trim(),
     };
-
-    async function tryIssueToken(region: string, key: string) {
-      if (!region || !key) return { ok: false, msg: 'Missing region or key' };
-      const tokenRes = await fetch(`https://${region}.api.cognitive.microsoft.com/sts/v1.0/issueToken`, {
-        method: 'POST',
-        headers: {
-          'Ocp-Apim-Subscription-Key': key,
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': '0',
-        },
-      });
-      const msg = await tokenRes.text();
-      return { ok: tokenRes.ok, msg, region, key };
-    }
 
     // Try primary, then secondary if needed
     let tokenResult = await tryIssueToken(primary.region, primary.key);

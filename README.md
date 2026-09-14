@@ -1,5 +1,8 @@
 # Voice Emotion Bot Platform
 
+[![CI](https://github.com/Minhaz2858/voice-emotion-bot-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Minhaz2858/voice-emotion-bot-platform/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A voice-first conversational agent platform: a Flask launcher that hosts multiple
 voice chat modes, backed by two Next.js applications that handle real-time
 speech-to-text, LLM reply generation, and low-latency text-to-speech with a

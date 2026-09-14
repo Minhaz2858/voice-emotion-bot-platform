@@ -1,20 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { iflytekTTS } from '../../../lib/iflytek-tts';
 
+// iFLYTEK TTS is not enabled in this deployment. The iFlytek client lives in
+// lib/iflytek-tts.ts (IflytekTTSClient) if you want to wire it up; the active
+// TTS path for this mode is /api/azure-tts.
 export async function POST(req: NextRequest) {
-  const { text } = await req.json();
-  if (!text) {
-    return NextResponse.json({ error: 'No text provided' }, { status: 400 });
-  }
-  try {
-    const audioBuffer = await iflytekTTS(text);
-    return new NextResponse(audioBuffer, {
-      status: 200,
-      headers: {
-        'Content-Type': 'audio/mpeg',
-      },
-    });
-  } catch (error) {
-    return NextResponse.json({ error: error.message || 'TTS failed' }, { status: 500 });
-  }
+  return NextResponse.json(
+    { error: 'iFLYTEK TTS is disabled. Use Azure Speech or ElevenLabs TTS instead.' },
+    { status: 503 }
+  );
 }

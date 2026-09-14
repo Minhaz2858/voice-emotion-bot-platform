@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
     const transcript = await iflytekSTT(audio);
     return NextResponse.json({ transcript });
   } catch (error) {
-    return NextResponse.json({ error: error.message || 'STT failed' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'STT failed';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

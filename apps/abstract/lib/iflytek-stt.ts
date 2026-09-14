@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 const APP_ID = process.env.IFLYTEK_APP_ID;
 const API_KEY = process.env.IFLYTEK_API_KEY;
 const API_SECRET = process.env.IFLYTEK_API_SECRET;
